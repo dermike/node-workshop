@@ -1,0 +1,21 @@
+{
+  "name": "nodejs-cli-example",
+  "version": "0.1.0",
+  "description": "CLI-exempel för node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cli",
+    "node",
+    "commander"
+  ],
+  "author": "Mikael Jergefelt",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^2.3.0",
+    "cheerio": "^0.17.0",
+    "form-data": "^0.1.4"
+  }
+}

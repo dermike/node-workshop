@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Mike's Node.js workshop</title>
+
+		<meta name="description" content="Node.js workshop med intro, exempel och övningar.">
+		<meta name="author" content="Mikael Jergefelt">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="presentation/css/reveal.min.css">
+		<link rel="stylesheet" href="presentation/css/theme/simple.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="presentation/lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+		<script>
+			if( window.location.search.match( /print-pdf/gi ) ) {
+				var link = document.createElement( 'link' );
+				link.rel = 'stylesheet';
+				link.type = 'text/css';
+				link.href = 'css/print/pdf.css';
+				document.getElementsByTagName( 'head' )[0].appendChild( link );
+			}
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+
+				<section>
+					<h2>Node.js workshop</h2>
+					<ul>
+						<li>Node som server</li>
+						<li>Node i kommandotolken</li>
+						<li>Node på hårdvara</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>Vad är Node.js?</h2>
+					<ul>
+						<li>Server-side javascript</li>
+						<li>Bygger på Google's V8-motor</li>
+						<li>Eventbaserat och asynkront</li>
+						<li>Realtid med streams och websockets</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>LAMP vs MEAN</h2>
+					<ul>
+						<li>M: MongoDB (No-SQL) istället för MySQL</li>
+						<li>E: ExpressJS (ramverk för Node) istället för Apache</li>
+						<li>A: AngularJS (för klientsidan)</li>
+						<li>N: NodeJS (ej bundet till Linux)</li>
+					</ul>
+					<p><br />Allt är javascript/JSON</p>
+				</section>
+
+				<section>
+					<h2>Modul-systemet i Node.js</h2>
+					<ul>
+						<li>Moduler är A och O</li>
+						<li>Kapslar in funktionalitet och gör koden mer lätthanterlig</li>
+						<li>Interna moduler, del av <a href="http://nodejs.org/docs/latest/api/">Node's API</a>:
+						  <ul>
+							  <li>fs, http</li>
+						  </ul>
+						</li>
+						<li>Externa javascript-moduler (kan ha C++ add-ons):
+							<ul>
+								<li>express, underscore, jade, request</li>
+							</ul>
+						</li>
+						<li>Det mesta finns färdigt via npm</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>CommonJS</h3>
+					<ul>
+						<li>Specifikation för beroendehantering i javascript.</li>
+						<li>Använder <code>require</code> för att importera.</li>
+					</ul>
+					<pre><code data-trim style="font-size: 18px; margin-top: 40px;">
+						var jsFile = require('./relative/path/file.js');
+					</code></pre>					
+				</section>
+
+				<section>
+					<h3>require</h3>
+					<pre><code data-trim style="font-size: 18px; margin-top: 40px;">
+var jsFile = require('./relative/path/file.js');
+var jsonFile = require('./relative/path/file.json');
+
+// använder först file.js och sedan file.json
+var someFile = require('./relative/path/file');
+
+// letar först efter main i package.json
+// annars index.js eller index.json
+var someDir = require('./relative/path');
+
+// letar efter core-modul med namn bajs
+// sedan i ./node_modules/bajs
+// sedan ../node_modules/bajs
+// o s v
+var bajs = require('bajs');
+					</code></pre>					
+				</section>
+
+				<section>
+					<h3>He's an importer exporter, okay?</h3>
+					<img src="presentation/images/importer.jpg" width="364"/>
+				</section>
+
+				<section>
+					<h3>module.exports</h3>
+					<pre><code data-trim style="font-size: 18px; margin-top: 40px;">
+module.exports = "Hej hej från en sträng!";
+// exporterar en literal
+
+module.exports = function() { };
+// exporterar en funktion
+
+module.exports = {'key': 'value'};
+// exporterar ett objekt
+					</code></pre>
+				</section>
+
+				<section>
+					<h3>npm</h3>
+					<ul>
+						<li>Node package manager</li>
+						<li>Verktyg för att installera moduler/beroenden och köra tester</li>
+					</ul>
+					<pre><code data-trim style="font-size: 18px; margin-top: 40px;">
+{
+  "name": "best-practices",
+  "description": "A package using versioning best-practices",
+  "author": "Art Vandelay &lt;art@vandelay.com&gt;",
+  "dependencies": {
+    "colors": "0.x.x",
+    "express": "2.3.x",
+    "optimist": "0.2.x"
+  },
+  "devDependencies": {
+    "vows": "0.5.x"
+  },
+  "engine": "node >= 0.4.1"
+}
+					</code></pre>
+					<p>package.json</p>					
+				</section>
+
+				<section>
+					<h3>Använda npm och package.json</h3>
+					<pre><code data-trim style="font-size: 18px; margin-top: 40px;">
+$ npm init
+
+$ npm install pkg [--save, --save-dev, -g]
+
+$ npm uninstall pkg [--save]
+
+$ npm prune
+
+$ npm ls
+
+$ npm update pkg
+					</code></pre>
+				</section>
+
+				<section>
+					<p><code>git clone https://github.com/dermike/node-workshop.git</code></p>
+					<p><code>cd exempel/exempel1</code></p>
+				</section>
+
+				<section>
+					<h2>Node som server, ett exempel</h2>
+					<p>Starta med <code>node index.js</code></p>
+					<pre><code data-trim style="font-size: 18px; margin-top: 40px;">
+var http = require('http');
+
+http.createServer(function (req, res) {
+  console.log('Request inkommet!');
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.end('Hello World!');
+}).listen(1337, '127.0.0.1');
+
+console.log('Server startad...');
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Node som server, övning</h2>
+					<p>Skriv om exemplet i modulform. Utgå ifrån ovning.js</p>
+					<p>Kom ihåg module.exports...</p>
+				</section>
+				<section>
+					<h2>Lösning</h2>
+					<pre><code data-trim style="font-size: 18px; margin-top: 40px;">
+var http = require('http');
+
+module.exports.start = function() {
+  http.createServer(function (req, res) {
+    console.log('Request inkommet!');
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    res.end('Hello World!');
+  }).listen(1337, '127.0.0.1');
+
+  console.log('Server startad...');
+};
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Övning: Chatt med express och socket.io</h2>
+					<p><code>cd exempel/exempel2</code></p>
+					<ol>
+						<li>Skapa package.json med <code>npm init</code></li>
+						<li>Ladda ner de moduler som behövs i index.js och spara som dependencies</li>
+						<li>Starta Chatt-appen med <code>node index.js</code> och gå till localhost:1337 i webbläsare</li>
+						<li>Utforska koden i index.js och under public/</li>
+					</ol>
+				</section>
+
+				<section>
+					<h2>Node i kommandotolken</h2>
+					<ul>
+						<li>#!/usr/bin/env node</li>
+						<li>chmod +x</li>
+						<li>npm install -g</li>
+					</ul>
+					<pre><code data-trim style="font-size: 18px; margin-top: 40px;">
+"bin": {
+  "mesh": "mesh.js"
+}
+    				</code></pre>
+				</section>
+
+				<section>
+					<h3>Node i kommandotolken, exempel</h3>
+					<p><code>cd exempel/exempel3</code></p>
+					<ol>
+						<li>Installera dependencies med <code>npm install</code></li>
+						<li><code>chmod +x mesh.js</code></li>
+						<li>Sök i Svensk MeSH med <code>./mesh.js sökord</code></li>
+						<li>Valfri övning: modifiera exemplet så det går att visa förklaring såhär: <code>./mesh.js sökord --visa</code></li>
+					</ol>
+				</section>
+
+				<section>
+					<h3>Node i kommandotolken, webbutveckling</h3>
+					<img src="presentation/images/gulp.jpg" style="max-width: 100%; border: none; box-shadow: none;" />
+				</section>
+
+				<section>
+					<h3>Node i kommandotolken, webbutveckling</h3>
+					<p><a href="http://bower.io">Bower</a> - A package manager for the web</p>
+					<p>Hantera frameworks, libraries, assets, utilities</p>
+					<pre><code data-trim style="font-size: 18px; margin-top: 20px;">
+{
+  "name": "ReferenceGuide",
+  "version": "1.0.0",
+  "homepage": "https://github.com/dermike/ReferenceGuide",
+  "authors": [
+    "Mikael Jergefelt &lt;mike@redvolume.com&gt;"
+  ],
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "bootstrap": "3.2.0"
+  }
+}
+    				</code></pre>
+    				<p>bower.json</p>
+				</section>
+
+				<section>
+					<h3>Node i kommandotolken, webbutveckling</h3>
+					<p><a href="http://gulpjs.com">Gulp.js</a> - the streaming build system</p>
+					<p>Plugins för att minifiera, konkatenera, strippa, modifiera m m</p>
+					<pre><code data-trim style="font-size: 18px; margin-top: 40px;">
+var gulp = require('gulp');
+var uncss = require('gulp-uncss'), concatCss = require('gulp-concat-css'), concat = require('gulp-concat'), uglify = require('gulp-uglify'), minifycss = require('gulp-minify-css');
+
+gulp.task('css', function() {
+  gulp.src(['bower_components/bootstrap/dist/css/bootstrap.css', 'css/custom.css'])
+    .pipe(uncss({
+      html: ['test.html'], // Saved from full copy of DOM
+      ignore: ['.collapsing', '.collapse.in', '.spacing']
+    }))
+    .pipe(concatCss("bundle.css"))
+    .pipe(minifycss())
+    .pipe(gulp.dest('./css'));
+});
+
+gulp.task('scripts', function() {
+  gulp.src(['bower_components/jquery/dist/jquery.js',
+            'bower_components/bootstrap/js/transition.js',
+            'bower_components/bootstrap/js/collapse.js',
+            'js/main.js'])
+    .pipe(uglify())
+    .pipe(concat('all.js'))
+    .pipe(gulp.dest('./js'))
+});
+
+gulp.task('default', ['css', 'scripts']);
+    				</code></pre>
+				</section>
+
+				<section>
+					<h2>Node på hårdvara</h2>
+					<p><a href="http://tessel.io">Tessel</a> - Hardware development for software developers</p>
+					<img src="presentation/images/tessel.jpg" style="max-width: 80%; border: none; box-shadow: none;" />
+				</section>
+
+				<section>
+					<h3>Node på hårdvara, Tessel-demo</h3>
+					<p>Ambient sensor (ljud och ljus)</p>
+					<p><small>"Clap to turn on the TV (paired with infrared) or know from a webapp if the lights are on at home."</small></p>
+					<pre><code data-trim style="font-size: 18px; margin-top: 40px;">
+var tessel = require('tessel');
+var ambientlib = require('ambient-attx4');
+
+var ambient = ambientlib.use(tessel.port['A']);
+
+ambient.on('ready', function () {
+ // Get points of light and sound data.
+  setInterval( function () {
+    ambient.getLightLevel( function(err, ldata) {
+      if (err) throw err;
+      ambient.getSoundLevel( function(err, sdata) {
+        if (err) throw err;
+        console.log("Light level:", ldata.toFixed(8), " ", "Sound Level:", sdata.toFixed(8));
+    });
+  })}, 500); // The readings will happen every .5 seconds unless the trigger is hit
+    				</code></pre>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="presentation/lib/js/head.min.js"></script>
+		<script src="presentation/js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Parallax scrolling
+				// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+				// parallaxBackgroundSize: '2100px 900px',
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'presentation/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'presentation/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'presentation/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'presentation/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'presentation/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'presentation/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
