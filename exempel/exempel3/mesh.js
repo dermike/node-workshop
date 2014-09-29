@@ -34,7 +34,7 @@ if (!program.args.length) {
 
         res.on('end', function() {
       	  $ = cheerio.load(body);
-          var sq = ('#contentHolder td a');
+          var sq = '#contentHolder td a';
           if ($(sq).length) {
             $(sq).each(function(i, elem) {
               console.log($(this).text());
